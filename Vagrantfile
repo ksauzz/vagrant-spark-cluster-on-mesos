@@ -6,11 +6,10 @@ VAGRANTFILE_API_VERSION = "2"
 
 options = {
   :vm_box => "hashicorp/precise64",
-  :vm_prefix => "vm",
+  :vm_prefix => "spark",
   :nodes => 3,
   :base_ip => "33.33.10",
   :ip_increment => 10,
-  :forwarded_ports => [],
   :port_increment => 100,
   :cores => 1,
   :memory => 512,
@@ -34,11 +33,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |cluster|
       config.vm.provider(:virtualbox) {|v| v.customize ["modifyvm", :id,
                                                         "--memory", options[:memory].to_i,
                                                         "--cpus",   options[:cores].to_i]}
-      # Setup the network
-      options[:forwarded_ports].each do |port|
-          forwarded_port = port + ((index - 1) * options[:port_increment])
-          config.vm.network :forwarded_port, guest: port, host: forwarded_port
-      end
 
       hostname = "#{options[:vm_prefix]}#{index}"
       address = "#{options[:base_ip]}.#{last_octet}"
