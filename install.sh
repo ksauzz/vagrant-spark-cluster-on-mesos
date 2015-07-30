@@ -6,18 +6,38 @@ HOSTNAME=$1
 ADDRESS=$2
 
 MESOS_VERSION=0.23.0
+SPARK_VERSION=1.4.1
 
 install_mesos() {
   echo "Installing mesos..."
   # Setup
-  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF
+  apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF
   DISTRO=$(lsb_release -is | tr '[:upper:]' '[:lower:]')
   CODENAME=$(lsb_release -cs)
 
   # Add the repository
   echo "deb http://repos.mesosphere.io/${DISTRO} ${CODENAME} main" |  sudo tee /etc/apt/sources.list.d/mesosphere.list
-  sudo apt-get -y update
-  sudo apt-get -y install mesos=$MESOS_VERSION-1.0.ubuntu1204
+  apt-get -y update
+  apt-get -y install mesos=$MESOS_VERSION-1.0.ubuntu1204
+}
+
+# Mesos driver requires newer libstdc++6
+upgrade_libstdc(){
+  echo "Upgrading libstdc++6..."
+  apt-get -y install python-software-properties
+  add-apt-repository ppa:ubuntu-toolchain-r/test
+  apt-get update
+  #apt-get -y install gcc-4.8
+  #update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
+  apt-get -y install libstdc++6
+}
+
+install_spark() {
+  echo "Installing spark..."
+  download http://ftp.riken.jp/net/apache/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop2.6.tgz
+  tar zxfv spark-${SPARK_VERSION}-bin-hadoop2.6.tgz
+  mv spark-${SPARK_VERSION}-bin-hadoop2.6 /opt/
+  ln -s /opt/spark-${SPARK_VERSION}-bin-hadoop2.6 /opt/spark
 }
 
 update_zk_config() {
@@ -41,5 +61,7 @@ update_hosts() {
 
 update_hosts
 increase_open_files
+upgrade_libstdc
 install_mesos
+install_spark
 update_zk_config
