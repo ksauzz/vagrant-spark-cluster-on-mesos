@@ -55,11 +55,6 @@ update_zk_config() {
   service zookeeper restart
 }
 
-update_hosts() {
-  sed -i.back "s/127.0.1.1/$ADDRESS/" /etc/hosts
-}
-
-update_hosts
 increase_open_files
 upgrade_libstdc
 install_mesos
