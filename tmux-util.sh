@@ -9,7 +9,7 @@ ZK_LOG=/var/log/zookeeper/zookeeper.log
 _ssh(){
   tmux split-window -v -p 66 "vagrant ssh spark2 -- $@"
   tmux split-window -v "vagrant ssh spark3 -- $@"
-  vagrant ssh spark1 -- "$@"
+  vagrant ssh spark1 -- $@
 }
 
 log_zk(){
@@ -22,6 +22,10 @@ log_mesos_master(){
 
 log_mesos_slave(){
   _ssh "tail -f $MESOS_SLAVE_LOG"
+}
+
+log_spark(){
+  _ssh "tail -f \"/opt/spark/logs/spark-root-org.apache.spark.deploy.mesos.MesosClusterDispatcher-1-\\\$(hostname).out\""
 }
 
 usage(){

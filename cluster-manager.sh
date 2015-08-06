@@ -28,7 +28,10 @@ start_cluster(){
       --log_dir=/var/log/mesos/ \
       --master=zk://33.33.10.10:2181,33.33.10.20:2181,33.33.10.30:2181/mesos &>/dev/null &"
 
-  cmd_all "\
+}
+
+start_mesos_dispatcher(){
+  cmd $1 "\
     sudo /opt/spark/sbin/start-mesos-dispatcher.sh \
       --zk 33.33.10.10:2181,33.33.10.20:2181,33.33.10.30:2181 \
       --master mesos://33.33.10.10:5050,33.33.10.20:5050,33.33.10.30:5050/mesos"
@@ -47,6 +50,10 @@ mesos_cmd() {
 case "$1" in
   start)
     start_cluster
+    ;;
+  start-dispatcher)
+    shift
+    start_mesos_dispatcher $1
     ;;
   stop)
     stop_cluster
