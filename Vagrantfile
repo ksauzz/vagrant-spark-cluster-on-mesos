@@ -24,7 +24,6 @@ opt.vm_prefix      = "spark"
 opt.nodes          = 3
 opt.base_ip        = "33.33.10"
 opt.ip_increment   = 10
-opt.port_increment = 100
 opt.cores          = 2
 opt.memory         = 2048
 
@@ -55,7 +54,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |cluster|
 
       config.vm.hostname = opt.hostname(index)
       config.vm.network :private_network, ip: opt.address(index)
-
       config.vm.provision "shell", path: "install.sh", args: [opt.hostname(index), opt.address(index)]
     end
   end
