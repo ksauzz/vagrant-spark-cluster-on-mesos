@@ -35,6 +35,17 @@ install_java() {
   apt-get install -y --no-install-recommends oracle-java8-installer
 }
 
+install_open_jdk() {
+  if [ "`which java`" != "" ]; then
+    echo "Java has been already installed."
+    return
+  fi
+
+  add-apt-repository -y ppa:openjdk-r/ppa
+  apt-get update
+  apt-get install -y --no-install-recommends openjdk-8-jdk
+}
+
 increase_open_files(){
   if [ -f /etc/security/limits.d/custom.conf ]; then
     echo "openfile settings is already done."

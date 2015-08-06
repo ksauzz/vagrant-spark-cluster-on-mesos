@@ -57,6 +57,7 @@ update_zk_config() {
 
 increase_open_files
 upgrade_libstdc
+install_open_jdk
 install_mesos
 install_spark
 update_zk_config
