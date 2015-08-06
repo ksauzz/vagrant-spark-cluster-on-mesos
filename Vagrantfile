@@ -11,8 +11,8 @@ options = {
   :base_ip => "33.33.10",
   :ip_increment => 10,
   :port_increment => 100,
-  :cores => 1,
-  :memory => 512,
+  :cores => 2,
+  :memory => 2048,
 }
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |cluster|
