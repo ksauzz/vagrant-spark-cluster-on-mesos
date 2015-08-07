@@ -27,8 +27,6 @@ upgrade_libstdc(){
   apt-get -y install python-software-properties
   add-apt-repository ppa:ubuntu-toolchain-r/test
   apt-get update
-  #apt-get -y install gcc-4.8
-  #update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 50
   apt-get -y install libstdc++6
 }
 
