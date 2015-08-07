@@ -2,9 +2,6 @@
 
 . /vagrant/lib/utils.sh
 
-HOSTNAME=$1
-ADDRESS=$2
-
 MESOS_VERSION=0.23.0
 SPARK_VERSION=1.4.1
 
@@ -36,6 +33,7 @@ install_spark() {
   tar zxfv spark-${SPARK_VERSION}-bin-hadoop2.6.tgz
   mv spark-${SPARK_VERSION}-bin-hadoop2.6 /opt/
   ln -s /opt/spark-${SPARK_VERSION}-bin-hadoop2.6 /opt/spark
+  echo 'export PATH=$PATH:/opt/spark/bin:/opt/spark/sbin' > /etc/profile.d/spark.sh
 }
 
 update_zk_config() {
@@ -43,11 +41,11 @@ update_zk_config() {
   sed -i.back 's/#server.1=zookeeper1:2888:3888/server.1=33.33.10.10:2888:3888/' /etc/zookeeper/conf/zoo.cfg
   sed -i.back 's/#server.2=zookeeper2:2888:3888/server.2=33.33.10.20:2888:3888/' /etc/zookeeper/conf/zoo.cfg
   sed -i.back 's/#server.3=zookeeper3:2888:3888/server.3=33.33.10.30:2888:3888/' /etc/zookeeper/conf/zoo.cfg
-  echo `echo $HOSTNAME|egrep -o [0-9]+` > /etc/zookeeper/conf/myid
-
-  sed -i 's/JAVA_OPTS=""/JAVA_OPTS="-Djava.net.preferIPv4Stack=true"/' /etc/zookeeper/conf/environment
+  echo `hostname|egrep -o [0-9]+` > /etc/zookeeper/conf/myid
 
   # workaroud for https://bugs.launchpad.net/ubuntu/+source/zookeeper/+bug/888643
+  sed -i 's/JAVA_OPTS=""/JAVA_OPTS="-Djava.net.preferIPv4Stack=true"/' /etc/zookeeper/conf/environment
+
   echo "Restart zookeeper process to apply the changes..."
 
   service zookeeper restart

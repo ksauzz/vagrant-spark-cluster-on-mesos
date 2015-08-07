@@ -40,6 +40,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |cluster|
       end
       if Vagrant.has_plugin?("vagrant-hosts")
         config.vm.provision :hosts do |provisioner|
+          provisioner.add_localhost_hostnames = false
           (1..opt.nodes).each do |idx|
             provisioner.add_host opt.address(idx), [opt.hostname(idx)]
           end
@@ -54,7 +55,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |cluster|
 
       config.vm.hostname = opt.hostname(index)
       config.vm.network :private_network, ip: opt.address(index)
-      config.vm.provision "shell", path: "install.sh", args: [opt.hostname(index), opt.address(index)]
+      config.vm.provision "shell", path: "install.sh"
     end
   end
 end

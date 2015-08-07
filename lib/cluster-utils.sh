@@ -16,8 +16,7 @@ cmd_no_echo() {
 }
 
 cmd_all() {
-  prefix=`grep ':vm_prefix =>' ./Vagrantfile | sed 's/\(.*\)\"\(.*\)\"\(.*\)/\2/'`
-  for host in `vagrant status | egrep -o "$prefix[0-9]+"`; do
+  for host in `vagrant status | grep running | awk '{print $1}'`; do
     cmd $host "$@"
   done
 }

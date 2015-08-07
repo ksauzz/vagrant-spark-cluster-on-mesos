@@ -16,18 +16,19 @@ Commands:
 EOS
 }
 
-start_cluster(){
+start_mesos_master(){
   cmd_all "\
     sudo mesos master --work_dir=/var/lib/mesos/master \
       --quorum=2 \
       --log_dir=/var/log/mesos/ \
       --zk=zk://33.33.10.10:2181,33.33.10.20:2181,33.33.10.30:2181/mesos &>/dev/null &"
+}
 
+start_mesos_slave(){
   cmd_all "\
     sudo mesos slave --work_dir=/var/lib/mesos/slave \
       --log_dir=/var/log/mesos/ \
       --master=zk://33.33.10.10:2181,33.33.10.20:2181,33.33.10.30:2181/mesos &>/dev/null &"
-
 }
 
 start_mesos_dispatcher(){
@@ -37,7 +38,11 @@ start_mesos_dispatcher(){
       --master mesos://33.33.10.10:5050,33.33.10.20:5050,33.33.10.30:5050/mesos"
 }
 
-stop_cluster(){
+stop_mesos_dispatcher(){
+  cmd $1 "sudo /opt/spark/sbin/stop-mesos-dispatcher.sh"
+}
+
+stop_all(){
   cmd_all "sudo killall mesos-master && sudo killall mesos-slave && sudo /opt/spark/sbin/stop-mesos-dispatcher.sh"
 }
 
@@ -49,14 +54,20 @@ mesos_cmd() {
 
 case "$1" in
   start)
-    start_cluster
+    start_mesos_master
+    start_mesos_slave
+    start_mesos_dispatcher spark1
     ;;
-  start-dispatcher)
+  start[-_]dispatcher)
     shift
     start_mesos_dispatcher $1
     ;;
+  stop[-_]dispatcher)
+    shift
+    stop_mesos_dispatcher $1
+    ;;
   stop)
-    stop_cluster
+    stop_all
     ;;
   cmd-all)
     shift
