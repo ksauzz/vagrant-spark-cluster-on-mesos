@@ -58,6 +58,12 @@ case "$1" in
     start_mesos_slave
     start_mesos_dispatcher spark1
     ;;
+  start[-_]mesos[-_]master)
+    start_mesos_master
+    ;;
+  start[-_]mesos[-_]slave)
+    start_mesos_slave
+    ;;
   start[-_]dispatcher)
     shift
     start_mesos_dispatcher $1
